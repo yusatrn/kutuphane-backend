@@ -12,11 +12,12 @@ public class WebConfig implements WebMvcConfigurer {
     public void addCorsMappings(@NonNull CorsRegistry registry) {
         registry.addMapping("/**")
             .allowedOrigins(
-                "https://bubbly-stillness-production.up.railway.app",
+                "https://kutuphane-frontend-production.up.railway.app",
                 "http://localhost:3000"
             )
             .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
             .allowedHeaders("*")
+            .exposedHeaders("Authorization")
             .allowCredentials(true)
             .maxAge(3600);
     }
