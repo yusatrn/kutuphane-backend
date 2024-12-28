@@ -27,6 +27,7 @@ import com.library.service.UyeService;
 import java.util.stream.Collectors;
 
 import java.util.Arrays;
+import java.util.Collections;
 
 @Configuration
 @EnableWebSecurity
@@ -73,7 +74,15 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
             .csrf(csrf -> csrf.disable())
-            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+            .cors(cors -> cors.configurationSource(request -> {
+                CorsConfiguration config = new CorsConfiguration();
+                config.setAllowCredentials(true);
+                config.setAllowedOriginPatterns(Collections.singletonList("*"));
+                config.setAllowedHeaders(Arrays.asList("Origin", "Content-Type", "Accept", "Authorization"));
+                config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+                config.setExposedHeaders(Arrays.asList("Authorization"));
+                return config;
+            }))
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
